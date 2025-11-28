@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jonathan Karten | Principal, Awz Ventures</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        slate: {
+                            850: '#1e293b',
+                            900: '#0f172a',
+                            950: '#020617', 
+                        },
+                        accent: {
+                            500: '#3b82f6', // Electric Blue for Tech/Security
+                            600: '#2563eb',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar for the 'Authority' feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #020617; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+        
+        /* Bento Grid Hover Effects */
+        .bento-card {
+            transition: all 0.3s ease;
+        }
+        .bento-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px -10px rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans antialiased selection:bg-accent-500 selection:text-white">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        const { 
+            Shield, 
+            TrendingUp, 
+            BookOpen, 
+            Users, 
+            ArrowUpRight, 
+            Globe, 
+            Lock, 
+            Brain, 
+            Briefcase, 
+            Menu, 
+            X, 
+            Linkedin, 
+            Twitter, 
+            Mail 
+        } = lucide;
+
+        // --- Components ---
+
+        const Nav = () => {
+            const [isOpen, setIsOpen] = useState(false);
+            const [scrolled, setScrolled] = useState(false);
+
+            useEffect(() => {
+                const handleScroll = () => setScrolled(window.scrollY > 50);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            const navLinks = [
+                { name: 'Thesis', href: '#thesis' },
+                { name: 'Bio', href: '#bio' },
+                { name: 'Portfolio', href: '#portfolio' },
+                { name: 'Insights', href: '#insights' },
+                { name: 'Contact', href: '#contact' },
+            ];
+
+            return (
+                <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-slate-950/90 backdrop-blur-md border-b border-white/5 py-4' : 'bg-transparent py-6'}`}>
+                    <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+                        <a href="#" className="text-xl font-bold tracking-tight text-white font-serif">
+                            JONATHAN <span className="text-slate-400">KARTEN</span>
+                        </a>
+                        
+                        {/* Desktop Nav */}
+                        <div className="hidden md:flex space-x-8">
+                            {navLinks.map((link) => (
+                                <a key={link.name} href={link.href} className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
+                                    {link.name}
+                                </a>
+                            ))}
+                        </div>
+
+                        {/* Mobile Toggle */}
+                        <button className="md:hidden text-white" onClick={() => setIsOpen(!isOpen)}>
+                            {isOpen ? <X /> : <Menu />}
+                        </button>
+                    </div>
+
+                    {/* Mobile Menu */}
+                    {isOpen && (
+                        <div className="md:hidden absolute top-full left-0 w-full bg-slate-950 border-b border-white/10 p-6 flex flex-col space-y-4">
+                            {navLinks.map((link) => (
+                                <a 
+                                    key={link.name} 
+                                    href={link.href} 
+                                    className="text-lg font-medium text-slate-300"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    {link.name}
+                                </a>
+                            ))}
+                        </div>
+                    )}
+                </nav>
+            );
+        };
+
+        const Hero = () => {
+            return (
+                <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 px-6 max-w-7xl mx-auto flex flex-col justify-center min-h-[80vh]">
+                    <div className="relative z-10 max-w-4xl">
+                        <div className="inline-flex items-center space-x-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-8">
+                            <span className="flex h-2 w-2 rounded-full bg-accent-500 animate-pulse"></span>
+                            <span className="text-xs font-semibold tracking-wide uppercase text-slate-300">Principal at Awz Ventures</span>
+                        </div>
+                        
+                        <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-medium text-white leading-[1.1] mb-8">
+                            Capitalizing <br className="hidden md:block" />
+                            <span className="text-slate-500">Resilience.</span>
+                        </h1>
+                        
+                        <p className="text-lg md:text-xl text-slate-400 max-w-2xl leading-relaxed mb-10">
+                            Bridging the gap between National Security Intelligence and High-Velocity Venture Capital. 
+                            Engineering the future of global security through dual-use technology investment.
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <a href="#thesis" className="inline-flex justify-center items-center px-8 py-3 bg-white text-slate-950 font-semibold rounded-lg hover:bg-slate-200 transition-colors">
+                                Investment Thesis
+                            </a>
+                            <a href="#contact" className="inline-flex justify-center items-center px-8 py-3 bg-transparent border border-white/20 text-white font-medium rounded-lg hover:bg-white/5 transition-colors">
+                                Get in Touch
+                            </a>
+                        </div>
+                    </div>
+
+                    {/* Background Abstract Grid */}
+                    <div className="absolute top-0 right-0 -z-0 opacity-20">
+                        <svg width="600" height="600" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <mask id="mask0_1_2" style={{maskType:'alpha'}} maskUnits="userSpaceOnUse" x="0" y="0" width="600" height="600">
+                                <rect width="600" height="600" fill="url(#paint0_radial_1_2)"/>
+                            </mask>
+                            <g mask="url(#mask0_1_2)">
+                                <path d="M50 0V600" stroke="white" strokeWidth="1"/>
+                                <path d="M150 0V600" stroke="white" strokeWidth="1"/>
+                                <path d="M250 0V600" stroke="white" strokeWidth="1"/>
+                                <path d="M350 0V600" stroke="white" strokeWidth="1"/>
+                                <path d="M450 0V600" stroke="white" strokeWidth="1"/>
+                                <path d="M550 0V600" stroke="white" strokeWidth="1"/>
+                                <path d="M0 50H600" stroke="white" strokeWidth="1"/>
+                                <path d="M0 150H600" stroke="white" strokeWidth="1"/>
+                                <path d="M0 250H600" stroke="white" strokeWidth="1"/>
+                                <path d="M0 350H600" stroke="white" strokeWidth="1"/>
+                                <path d="M0 450H600" stroke="white" strokeWidth="1"/>
+                                <path d="M0 550H600" stroke="white" strokeWidth="1"/>
+                            </g>
+                            <defs>
+                                <radialGradient id="paint0_radial_1_2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(300 300) rotate(90) scale(300)">
+                                    <stop stopColor="#D9D9D9"/>
+                                    <stop offset="1" stopColor="#737373" stopOpacity="0"/>
+                                </radialGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                </section>
+            );
+        };
+
+        const StatCard = ({ label, value, subtext }) => (
+            <div className="flex flex-col p-6 bg-white/5 border border-white/10 rounded-xl">
+                <span className="text-sm text-slate-400 uppercase tracking-wider mb-2">{label}</span>
+                <span className="text-4xl font-serif text-white font-medium mb-1">{value}</span>
+                <span className="text-xs text-slate-500">{subtext}</span>
+            </div>
+        );
+
+        const BentoGrid = () => {
+            return (
+                <section id="bio" className="px-6 py-20 max-w-7xl mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(250px,auto)]">
+                        
+                        {/* 1. The Investor (Main Feature) */}
+                        <div className="md:col-span-2 row-span-2 bento-card rounded-2xl bg-slate-900 border border-white/10 p-8 flex flex-col justify-between relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-6 opacity-50 group-hover:opacity-100 transition-opacity">
+                                <TrendingUp size={32} className="text-accent-500" />
+                            </div>
+                            <div>
+                                <h3 className="text-sm font-semibold text-accent-500 uppercase tracking-wider mb-2">The Investor</h3>
+                                <h2 className="text-3xl font-serif text-white mb-4">Principal at Awz Ventures</h2>
+                                <p className="text-slate-400 max-w-md">
+                                    Specializing in M&A, Capital Strategy, and Corporate Growth. Identifying technology that serves a dual mandate: driving economic prosperity while securing critical infrastructure.
+                                </p>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4 mt-8">
+                                <div className="border-l-2 border-accent-500 pl-4">
+                                    <div className="text-3xl font-bold text-white">2.7x</div>
+                                    <div className="text-xs text-slate-400 uppercase">MOIC (Prev. Fund)</div>
+                                </div>
+                                <div className="border-l-2 border-accent-500 pl-4">
+                                    <div className="text-3xl font-bold text-white">22.12%</div>
+                                    <div className="text-xs text-slate-400 uppercase">IRR (Prev. Fund)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 2. The Scholar */}
+                        <div className="bento-card rounded-2xl bg-slate-900 border border-white/10 p-8 flex flex-col justify-between">
+                            <Brain size={24} className="text-slate-400 mb-4" />
+                            <div>
+                                <h3 className="text-xl font-serif text-white mb-2">The Scholar</h3>
+                                <p className="text-sm text-slate-400 leading-relaxed mb-4">
+                                    Merging Financial Engineering with Psychology. Columbia University Magna Cum Laude graduate.
+                                </p>
+                                <div className="flex flex-wrap gap-2">
+                                    <span className="px-2 py-1 text-xs bg-white/5 rounded border border-white/5 text-slate-300">Financial Engineering</span>
+                                    <span className="px-2 py-1 text-xs bg-white/5 rounded border border-white/5 text-slate-300">Behavioral Economics</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 3. The Soldier */}
+                        <div className="bento-card rounded-2xl bg-slate-900 border border-white/10 p-8 flex flex-col justify-between">
+                            <Shield size={24} className="text-slate-400 mb-4" />
+                            <div>
+                                <h3 className="text-xl font-serif text-white mb-2">The Soldier</h3>
+                                <p className="text-sm text-slate-400 leading-relaxed">
+                                    Veteran Staff Sergeant, IDF Intelligence Division (Horizon Unit). Instilling a zero-failure mindset into capital deployment.
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* 4. The Bridge (Community) */}
+                        <div className="md:col-span-2 bento-card rounded-2xl bg-slate-900 border border-white/10 p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                            <div className="flex-1">
+                                <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">The Bridge</h3>
+                                <h2 className="text-2xl font-serif text-white mb-2">The Kibbutz & Iftach Group</h2>
+                                <p className="text-slate-400 text-sm">
+                                    Democratizing access to global capital for Israeli startups. Founded "The Kibbutz" accelerator to provide a soft landing for founders in NYC.
+                                </p>
+                            </div>
+                            <div className="flex gap-3">
+                                <a href="#" className="p-3 bg-white/5 rounded-full hover:bg-white/10 transition-colors border border-white/10">
+                                    <Globe size={20} />
+                                </a>
+                                <a href="#" className="p-3 bg-white/5 rounded-full hover:bg-white/10 transition-colors border border-white/10">
+                                    <Users size={20} />
+                                </a>
+                            </div>
+                        </div>
+
+                        {/* 5. Philanthropy */}
+                        <div className="bento-card rounded-2xl bg-white text-slate-950 p-8 flex flex-col justify-between">
+                            <h3 className="text-sm font-bold uppercase tracking-wider mb-2 text-slate-500">Service</h3>
+                            <div>
+                                <h2 className="text-2xl font-serif font-semibold mb-2">Philanthropy</h2>
+                                <p className="text-slate-600 text-sm mb-4">
+                                    Investment Committee Chair at Beth Tzedec. Board leadership for Park East Synagogue.
+                                </p>
+                                <span className="inline-block border-b border-slate-950 pb-0.5 text-xs font-bold uppercase tracking-wider cursor-pointer">
+                                    Community Trust
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+            );
+        };
+
+        const ThesisSection = () => {
+            const pillars = [
+                {
+                    title: "Artificial Intelligence",
+                    desc: "Predictive capability is the ultimate security asset. Investing in cognitive computing and supply chain visibility.",
+                    tech: "Conbo.ai",
+                    icon: <Brain size={20} />
+                },
+                {
+                    title: "Cybersecurity",
+                    desc: "In a zero-trust world, security must be intrinsic. Focusing on Post-Quantum Cryptography and OT Security.",
+                    tech: "NanoLock Security",
+                    icon: <Lock size={20} />
+                },
+                {
+                    title: "Photonics & Hardware",
+                    desc: "Software eats the world, but hardware sustains it. Backing the physical layer of the digital future.",
+                    tech: "Diamond Electronics",
+                    icon: <Briefcase size={20} />
+                }
+            ];
+
+            return (
+                <section id="thesis" className="py-20 bg-slate-900 border-y border-white/5">
+                    <div className="max-w-7xl mx-auto px-6">
+                        <div className="mb-12 md:max-w-2xl">
+                            <h2 className="text-sm font-semibold text-accent-500 uppercase tracking-wider mb-3">Investment Thesis</h2>
+                            <h3 className="text-3xl md:text-4xl font-serif text-white mb-6">Dual-Use Technology</h3>
+                            <p className="text-slate-400">
+                                "Dual-Use" refers to technologies with both commercial and security applications. 
+                                By serving two masters—Profit and Security—these companies are insulated from standard market recessions.
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {pillars.map((pillar, idx) => (
+                                <div key={idx} className="group relative p-6 rounded-xl border border-white/10 bg-slate-950 hover:bg-slate-800 transition-colors">
+                                    <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-white mb-4 group-hover:bg-accent-500 transition-colors">
+                                        {pillar.icon}
+                                    </div>
+                                    <h4 className="text-xl font-medium text-white mb-3">{pillar.title}</h4>
+                                    <p className="text-sm text-slate-400 mb-6 leading-relaxed">
+                                        {pillar.desc}
+                                    </p>
+                                    <div className="text-xs font-mono text-accent-500">
+                                        Portfolio: {pillar.tech}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const InsightsList = () => {
+            const articles = [
+                {
+                    title: "The Civil Rights Frontier: Title VI and the Protection of Jewish Students",
+                    category: "Legal Precedent",
+                    date: "Thought Leadership",
+                    desc: "How the 2019 Executive Order changed the legal landscape for minority groups on campus."
+                },
+                {
+                    title: "The Asymmetry of Defense",
+                    category: "Venture Capital",
+                    date: "Market Thesis",
+                    desc: "Why private capital is becoming the new national shield in a volatile geopolitical landscape."
+                },
+                {
+                    title: "Behavioral Alpha: The Psychology of the Pre-Seed Deal",
+                    category: "Economics",
+                    date: "Methodology",
+                    desc: "Applying behavioral psychology to structure deals that align founder emotions with financial targets."
+                }
+            ];
+
+            return (
+                <section id="insights" className="py-24 max-w-7xl mx-auto px-6">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-white/10 pb-8">
+                        <div>
+                            <h2 className="text-3xl font-serif text-white">Latest Thinking</h2>
+                        </div>
+                        <a href="#" className="text-sm text-slate-400 hover:text-white mt-4 md:mt-0 flex items-center gap-2">
+                            View all writings <ArrowUpRight size={16} />
+                        </a>
+                    </div>
+
+                    <div className="space-y-8">
+                        {articles.map((article, idx) => (
+                            <div key={idx} className="group cursor-pointer">
+                                <div className="flex flex-col md:flex-row gap-4 md:items-baseline justify-between mb-2">
+                                    <h3 className="text-xl md:text-2xl font-medium text-slate-200 group-hover:text-accent-500 transition-colors">
+                                        {article.title}
+                                    </h3>
+                                    <span className="text-xs font-mono text-slate-500 uppercase shrink-0">{article.category}</span>
+                                </div>
+                                <p className="text-slate-400 text-sm max-w-2xl">{article.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        };
+
+        const Footer = () => {
+            return (
+                <footer id="contact" className="bg-slate-900 border-t border-white/5 pt-20 pb-10">
+                    <div className="max-w-7xl mx-auto px-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+                            <div className="col-span-1 lg:col-span-2">
+                                <h2 className="font-serif text-3xl text-white mb-6">Jonathan Karten</h2>
+                                <p className="text-slate-400 max-w-sm mb-8">
+                                    Engineering the future of global security. 
+                                    Principal at Awz Ventures.
+                                </p>
+                                <div className="flex gap-4">
+                                    <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-white hover:text-slate-900 transition-all">
+                                        <Linkedin size={18} />
+                                    </a>
+                                    <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-white hover:text-slate-900 transition-all">
+                                        <Twitter size={18} />
+                                    </a>
+                                    <a href="mailto:contact@awzventures.com" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-white hover:text-slate-900 transition-all">
+                                        <Mail size={18} />
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 className="text-white font-semibold mb-4">Contact</h4>
+                                <ul className="space-y-2 text-sm text-slate-400">
+                                    <li>Speaking Inquiries</li>
+                                    <li>Press Kit</li>
+                                    <li>Investment Deck</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h4 className="text-white font-semibold mb-4">Offices</h4>
+                                <ul className="space-y-2 text-sm text-slate-400">
+                                    <li>Toronto, Canada</li>
+                                    <li>Tel Aviv, Israel</li>
+                                    <li>New York, USA</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-slate-600">
+                            <p>&copy; 2025 Jonathan Karten. All Rights Reserved.</p>
+                            <p>Awz Ventures &trade;</p>
+                        </div>
+                    </div>
+                </footer>
+            );
+        };
+
+        const App = () => {
+            // Icon injection for Lucide
+            React.useEffect(() => {
+                lucide.createIcons();
+            }, []);
+
+            return (
+                <div className="min-h-screen bg-slate-950 text-slate-200">
+                    <Nav />
+                    <Hero />
+                    <BentoGrid />
+                    <ThesisSection />
+                    <InsightsList />
+                    <Footer />
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
